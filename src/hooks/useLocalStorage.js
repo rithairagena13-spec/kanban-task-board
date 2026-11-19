@@ -1,20 +1,19 @@
-
 import { useState, useEffect } from 'react'
 
 export default function useLocalStorage(key, initialValue) {
-  const [storedValue, setStoredValue] = useState(initialValue)
-
-  useEffect(() => {
+  const [storedValue, setStoredValue] = useState(() => {
     const savedValue = localStorage.getItem(key)
 
     if (savedValue !== null) {
       try {
-        setStoredValue(JSON.parse(savedValue))
+        return JSON.parse(savedValue)
       } catch {
         localStorage.removeItem(key)
       }
     }
-  }, [key])
+
+    return initialValue
+  })
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(storedValue))
